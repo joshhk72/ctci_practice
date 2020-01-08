@@ -10,8 +10,55 @@ var printList = function (a) {
   }
 };
 
-const sumLists = (headOne, headTwo) => {
+const sumListHelper = (node1, node2, carry=0) => {
+  if (!node1 && !node2 && carry === 0) {
+    return null
+  }
 
+  let value = carry;
+  value += node1 ? node1.value : 0;
+  value += node2 ? node2.value : 0;
+  const node = new LinkedList(value % 10)
+  node.next = sumListHelper(
+    node1 ? node1.next : null,
+    node2 ? node2.next : null,
+    value > 10 ? 1 : 0)
+  return node
+}
+
+const sumList = (head1, head2) => {
+  let dig1 = 0;
+  let dig2 = 0;
+
+  let current1 = head1;
+  let current2 = head2;
+
+  while (current1) {
+    dig1++;
+    current1 = current1.next;    
+  }
+
+  while (current2) {
+    dig2++;
+    current2 = current2.next;
+  }
+
+  // get lists to same length;
+
+  while (dig1 !== dig2) {
+    let newHead = new LinkedList(0);
+    if (dig1 > dig2) {
+      newHead.next = head2;
+      head2 = newHead;
+      dig2++;
+    } else {
+      newHead.next = head1;
+      head1 = newHead
+      dig1++;
+    }
+  }
+
+  return sumListHelper(head1, head2);
 }
 
 /* TEST */
